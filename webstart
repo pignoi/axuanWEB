@@ -1,0 +1,14 @@
+#!/usr/bin/anaconda3/bin/python3
+
+import os,time
+
+try:
+    with open("/home/webserver/web/logs/gunicorn.pid","r") as f:
+        f.seek(0)
+        pid = f.readline().split("\n")[0]
+
+    os.system(f"echo 301532aa | sudo -S kill {pid}")
+    time.sleep(2)
+finally:
+    os.chdir('/home/webserver/web')
+    os.system("echo 301532aa | sudo -S /usr/local/bin/gunicorn start:app -c gunicorn_conf.py &")
