@@ -15,7 +15,7 @@ def zhz_upload():
     pics = request.files.getlist('daily_pic')    # 接受图片
     mes1 = mes.split('\r\n')
     if mes1.count("") == len(mes1) and pics==[]:
-        return redirect("http://www.axuan.wang/zhz")
+        return redirect("/zhz")
     else:
         deal1 = ""
         for singleLine in mes1:
@@ -29,7 +29,7 @@ def zhz_upload():
 ### 图片部分
 
         now_max = 1
-        alrea = os.listdir('/web/static/rec_pic')
+        alrea = os.listdir('static/rec_pic')
         now_day = time.strftime('%Y%m%d')
         day_count = []
         for day_pic in alrea:
@@ -44,7 +44,7 @@ def zhz_upload():
         once_pic = []
         for pic in pics:
             if pic and allow_form(pic.filename)[0] == 1:
-                new_fname = r'/home/webserver/web/static/rec_pic/' + f'{now_day}_{now_max}.{allow_form(pic.filename)[1]}'
+                new_fname = r'static/rec_pic/' + f'{now_day}_{now_max}.{allow_form(pic.filename)[1]}'
                 pic.save(new_fname)  #保存文件到指定路径
                 once_pic.append(rf'rec_pic/{now_day}_{now_max}.{allow_form(pic.filename)[1]}')
                 re_mes1 = '图片上传成功'
@@ -80,5 +80,5 @@ def zhz_upload():
         filet.seek(0,0)
         filet.write(deal2+already)
 
-        return redirect("http://www.axuan.wang/zhz")
+        return redirect("/zhz")
 

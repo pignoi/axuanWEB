@@ -20,7 +20,7 @@ def own_upload():
     pics = request.files.getlist('own_daily_pic')
 
     now_max = 1
-    alrea = os.listdir('/web/static/rec_pic_own')
+    alrea = os.listdir('static/rec_pic_own')
     now_day = time.strftime('%Y%m%d')
     day_count = []
     for day_pic in alrea:
@@ -35,7 +35,7 @@ def own_upload():
     once_pic = []
     for pic in pics:
         if pic and allow_form(pic.filename)[0] == 1:
-            new_fname = r'/home/webserver/web/static/rec_pic_own/' + f'{now_day}_{now_max}.{allow_form(pic.filename)[1]}'
+            new_fname = r'static/rec_pic_own/' + f'{now_day}_{now_max}.{allow_form(pic.filename)[1]}'
             pic.save(new_fname)  #保存文件到指定路径
             once_pic.append(rf'rec_pic_own/{now_day}_{now_max}.{allow_form(pic.filename)[1]}')
             re_mes1 = '图片上传成功'
@@ -71,5 +71,5 @@ def own_upload():
     filet.seek(0,0)
     filet.write(deal2+already)
 
-    return redirect("http://www.axuan.wang/own")
+    return redirect("/own")
 

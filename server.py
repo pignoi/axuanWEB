@@ -3,6 +3,7 @@ from flask import request,redirect,abort
 from wsgiref.simple_server import make_server
 import zhz_html,zhz_up
 import own_html,own_up
+import vpnServer
 
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -52,16 +53,16 @@ def t_ser():
 
     @server.errorhandler(404)    # 重定向404界面
     def demo4(e):
-        ip_toban = request.remote_addr
-        with open(".banned_ip","a+") as f:
-            f.seek(0)
-            alban = f.readlines()
-            if f"{ip_toban}\n" in alban:
-                pass
-            else:
-                f.seek(0)
-                f.write(f"{ip_toban}\n")
-        return redirect("https://www.baidu.com")
+        # ip_toban = request.remote_addr
+        # with open(".banned_ip","a+") as f:
+        #     f.seek(0)
+        #     alban = f.readlines()
+        #     if f"{ip_toban}\n" in alban:
+        #         pass
+        #     else:
+        #         f.seek(0)
+        #         f.write(f"{ip_toban}\n")
+        return "404 ERROR!"
 
     @server.errorhandler(429)    # 短时间内访问此数过多会重定向至429界面，然后加入黑名单
     def demo429(e):
@@ -182,6 +183,13 @@ def t_ser():
         
         os.system("/usr/bin/python3 /home/webserver/web/daily_report/monitor-miniairflow.py &")
         return redirect("/airflow.html")
+    
+    @server.route("/subscribe",methods=["get"])
+    def subscribe():
+        a, response = vpnServer.check_token()
+
+        return response
+    
     return server
 
 if __name__ == '__main__':

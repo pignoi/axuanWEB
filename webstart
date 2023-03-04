@@ -12,4 +12,4 @@ try:
     time.sleep(2)
 finally:
     os.chdir('/home/qqbot/axuanWEB')
-    os.system("echo {scode} | sudo -S /home/qqbot/.conda/envs/webserver/bin/gunicorn start:app -c gunicorn_conf.py &")
+    os.system(f"echo {scode} | sudo -S /home/qqbot/.conda/envs/webserver/bin/gunicorn start:app -c gunicorn_conf.py &")
