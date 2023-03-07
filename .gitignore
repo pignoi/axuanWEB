@@ -7,4 +7,4 @@ vpnServer.py
 temp_not/
 
 static.zip
-.inside*
+.inside**
