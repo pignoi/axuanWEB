@@ -3,6 +3,7 @@ __pycache__/
 records/*
 logs/*
 static/*
+vpnServer.py
 
 static.zip
 .inside*

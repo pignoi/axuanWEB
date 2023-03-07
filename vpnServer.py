@@ -100,6 +100,14 @@ proxies:
   password: "301532aa"
   # udp: true
 
+- name: "GuangDong"
+  type: ss
+  server: 39.108.94.161
+  port: 13579
+  cipher: aes-256-gcm
+  password: "301532bb"
+  # udp: true
+
 # 代理组策略
 # 策略组示例请查阅 Clash 项目 README 以使用最新格式：https://github.com/Dreamacro/clash/blob/master/README.md
 proxy-groups:
@@ -109,30 +117,9 @@ proxy-groups:
   type: url-test
   proxies:
     - "USA"
+    - "GuangDong"
   url: 'http://www.gstatic.com/generate_204'
   interval: 300
-
-# fallback 通过指定的 URL 测试并选择可用的节点，当 1 故障不可用时自动切换到 2 以此类推
-# - name: "Fallback"
-#   type: fallback
-#   proxies:
-#     - "1"
-#     - "2"
-#     - "3"
-#     - "4"
-#   url: 'http://www.gstatic.com/generate_204'
-#   interval: 300
-
-# load-balance: 负载均衡
-# - name: "LoadBalance"
-#   type: load-balance
-#   proxies:
-#     - "1"
-#     - "2"
-#     - "3"
-#     - "4"
-#   url: 'http://www.gstatic.com/generate_204'
-#   interval: 300
 
 # 代理节点选择
 - name: "PROXY"
@@ -145,28 +132,28 @@ proxy-groups:
 - name: "Final"
   type: select
   proxies:
-    - "DIRECT"
-    - "PROXY"
+    - "GuangDong"
+    - "USA"
 
 # Apple 服务代理
 - name: "Apple"
   type: select
   proxies:
-    - "DIRECT"
-    - "PROXY"
+    - "GuangDong"
+    - "USA"
 
 # 国际流媒体服务
 - name: "GlobalMedia"
   type: select
   proxies:
-    - "PROXY"
+    - "GuangDong"
     - "USA"
 
 # 大陆流媒体面向港澳台限定服务
 - name: "HKMTMedia"
   type: select
   proxies:
-    - "DIRECT"
+    - "GuangDong"
     - "USA"
 
 # 规则
