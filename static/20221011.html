@@ -1,0 +1,53 @@
+
+        <!DOCTYPE html>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+                <title>20221011</title>
+                <link rel="stylesheet" href="https://files.cnblogs.com/files/bpf-1024/linenum.css">
+                <link rel="stylesheet" href="https://files.cnblogs.com/files/bpf-1024/markdown.css">
+                <link rel="stylesheet" href="https://files.cnblogs.com/files/bpf-1024/tasklist.css">
+                <link rel="stylesheet" href="https://files.cnblogs.com/files/bpf-1024/codehighlight.css">
+                <link rel="stylesheet" href="https://files.cnblogs.com/files/bpf-1024/directory.css">
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css" crossorigin="anonymous">
+                <script src="https://files.cnblogs.com/files/bpf-1024/directory.js"></script>
+                <script src="https://unpkg.com/mermaid@8.7.0/dist/mermaid.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/mathtex-script-type.min.js" defer></script>
+            </head>
+            <body>
+                <article class="markdown-body" id="markdown-body">
+                    <h1 id="_1">进一步问题探究</h1>
+<h2 id="_2">高维高斯函数</h2>
+<p>
+<script type="math/tex; mode=display">
+\rho(\bold{r}) = ({1\over {(2\pi)^{1/2}*\vert\Sigma\vert}^{1/2}}){\rm exp}(-{1\over 2}(\bold{r}-\mu)^T\Sigma^{-1}(\bold{r}-\mu))
+</script>
+其中 <script type="math/tex">\Sigma</script> 为非常重要的co-variance matrix, 其具有以下的形式（或者我们在这里将其规定为三个参数 <script type="math/tex">\sigma_1 \sigma_2 \sigma_3</script>）
+<script type="math/tex; mode=display">
+\Sigma=\left[\begin{matrix}
+\sigma_1^2 & \rho_{12}\sigma_1\sigma_2 & \rho_{13}\sigma_1\sigma_3 \\
+\rho_{12}\sigma_1\sigma_2 & \sigma_2^2 & \rho_{23}\sigma_2\sigma_3 \\
+\rho_{13}\sigma_1\sigma_3 & \rho_{23}\sigma_2\sigma_3 & \sigma_3^2 \\
+\end{matrix}\right]
+</script>
+然后其中<script type="math/tex">\bold{r}-\mu</script>即为和坐标信息相关的内容
+<script type="math/tex; mode=display">
+\bold{r}-\mu = \left[\begin{matrix}
+x-\mu_1 \\
+y-\mu_2 \\
+z-\mu_3 \\
+\end{matrix}\right]
+</script>
+若<script type="math/tex">\mu</script>值均为0，那么或许可以理解为将原点设置为原点，不影响最终的计算结果。我们在机器学习的过程中需要进行优化的是三个<script type="math/tex">\sigma</script>参数以及三个<script type="math/tex">\rho</script>参数</p>
+<h2 id="_3">数值积分的目标公式</h2>
+<p>根据之前讨论的公式：
+<script type="math/tex; mode=display"> \rho_{ave}(z) = \iint_{-\infty}^{\infty}\rho(\bold{r}) {\rm d}x{\rm d}y</script>
+<script type="math/tex; mode=display"> V_{ave}(z)=-2\pi\int^{+\infin}_{-\infin}\rho_{ave}(z^\prime)|z-z^\prime|\ {\rm d}z^\prime\ </script> 
+从数值积分的角度来看，往往是进行n维函数的n重积分，如果积分重数和函数维数不相符，那么相当于进行不定积分，所以应当进一步的推导为：
+<script type="math/tex; mode=display"> V_{ave}(z^\prime)=-2\pi\iiint^{+\infin}_{-\infin}\rho(\bold{r})|z-z^\prime|\ {\rm d}x{\rm d}y{\rm d}z </script>
+</p>
+                </article>
+            </body>
+        </html>
+        

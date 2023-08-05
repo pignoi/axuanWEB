@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<title>Improved Upload Server</title>
+
+<style>
+    ul{
+        display:flex;
+        list-style:none;
+        margin:0%;
+    }
+    ul li{
+        flex:1;
+        background-color:aqua;
+    }
+</style>
+
+<head>
+    <script>
+        function getList() {            
+            var url="/upload/checkList";
+            var request = new XMLHttpRequest();
+            request.open("GET",url);
+
+            request.onload = function(){
+                if (request.status == 200){
+                    var pid = request.responseText;
+                    document.getElementById('result').innerHTML = pid;
+                }
+            }
+            request.send(null);       
+        }
+
+        function getDelete(filename) {            
+            var url="/upload/delete?file="+filename;
+            var request = new XMLHttpRequest();
+            request.open("GET",url);
+
+            request.onload = function(){
+                if (request.status == 200){
+                    var pid = request.responseText;
+                    document.getElementById('result').innerHTML = pid;
+                }
+            }
+            request.send(null);
+       
+        }
+
+        function upload(){
+            var url="/upload/do";
+            var request = new XMLHttpRequest();
+            var formData = new FormData();
+            var file = document.getElementById('file_upload').files;
+
+            for (var i=0; i<file.length; i++){
+                formData.append("img",file[i]);
+            }
+            document.getElementById('state').innerHTML = "正在上传";
+            request.open("POST", url);
+            request.send(formData);
+
+            request.onload = function(){
+                if (request.status == 200){
+                    var pid = request.responseText;
+                    document.getElementById('result').innerHTML = pid;
+                    document.getElementById('state').innerHTML = "上传成功";
+                }
+                else{
+                    document.getElementById('state').innerHTML = "上传失败";
+                }
+            }
+        }
+
+
+    </script>
+</head>
+
+<body>
+
+    <p id="result" align="center">暂无结果</p>
+
+    <button align="center" type="button" id="check" onclick="getList()">查看static路径下文件</button>
+    <p></p>
+    
+    <input type="file" id="file_upload" multiple/>
+    <p></p>
+    <button type="button" onclick="upload()">上传</button>
+
+    <p id="state"><p>
+
+</body>
+
+</html>

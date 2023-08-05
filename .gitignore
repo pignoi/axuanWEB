@@ -5,6 +5,10 @@ logs/*
 static/*
 vpnServer.py
 temp_not/
+tmpTest/
 
 static.zip
 .inside**
+
+!static/*.html
+!static/favicon.ico

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<title>airflow monitor</title>
+<head>
+    <script>
+        function getPid() {            
+            var url="/miniairflow-server.pid";
+            var request = new XMLHttpRequest();
+            request.open("GET",url);
+
+            request.onload = function(){
+                if (request.status == 200){
+                    var pid = request.responseText;
+                    document.getElementById('result').innerHTML = pid;
+                }
+            }
+            request.send(null);
+            window.localStorage.removeItem("miniairflow-server.pid");        
+        }
+
+        function restart(){
+            window.location.herf="http://www.axuan.wang/restart";
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <p id="result" align="center">暂无结果</p>
+    <p id="result2" align="center">PID显示位置</p>
+
+    <button align="center" type="button" id="check" onclick="getPid()">运行情况监测</button>
+    <button onclick="window.location.href='/restart'" type="button" id="restart">重新启动服务</button>
+</body>
+
+</html>
