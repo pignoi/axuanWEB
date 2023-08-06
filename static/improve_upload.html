@@ -12,6 +12,8 @@
     ul li{
         flex:1;
         background-color:aqua;
+        margin:0 0 -1px -1px;
+        border:1px solid black ;
     }
 </style>
 
@@ -53,20 +55,75 @@
             var file = document.getElementById('file_upload').files;
 
             for (var i=0; i<file.length; i++){
-                formData.append("img",file[i]);
+                formData.append("img", file[i]);
             }
-            document.getElementById('state').innerHTML = "正在上传";
+            document.getElementById('state1').innerHTML = "正在上传";
             request.open("POST", url);
+            
+            request.upload.onloadstart = function () {
+                stime = new Date().getTime();
+                sloaded = 0;
+            }
+            request.upload.onprogress = function (evt) {    
+                // 当前上传文件的文件大小：evt.loaded
+                // 需要上传的总文件的大小：evt.total
+                // 上传进度
+                //上传文件的百分比
+                //toFixed(参数)：保留几位小数  参数是整型的数值，数值是几就保留几位小数
+                let persent = ((evt.loaded / evt.total) * 100).toFixed(2);   
+                
+                document.getElementById("state1").innerHTML = persent + "%";
+
+                // 上传速度
+                // 上传结束时间
+                let endTime = new Date().getTime();
+
+                // 1、时间差（时间段）
+                let dTime = (endTime - stime) / 1000; //毫秒换算成秒
+
+                // 2、当前时间段内上传的文件大小
+                let dloaded = evt.loaded - sloaded;
+
+                // 3、当前速度= 当前上传文件的内容/当前时间差
+                let speed = dloaded / dTime;
+
+                // 重置上传开始时间与文件大小(分时段上传的)
+                stime = new Date().getTime();
+                sloaded = evt.loaded;
+
+                // 基本单位request：字节b
+                // 1mb=1024kb    1kb=1024b
+                // b/s
+                let unit = "b/s"; //不足1kb，以b/s来计算速度
+                // kb/s
+                if (speed / 1024 > 1) { //当大小超过1024b(即1kb时)，以kb/s来计算速度
+                    unit = "kb/s";
+                    speed = speed / 1024;
+                }
+                // mb/s  
+                if (speed / 1024 > 1) { //当大小超过1024Kb(即1mb时)，以mb/s来计算速度
+                    unit = "mb/s";
+                    speed = speed / 1024;
+                }
+                document.getElementById("state2").innerHTML = speed.toFixed(2) + unit;
+            }
+            request.upload.onload = function () {
+                document.getElementById('state1').innerHTML = "上传成功";
+            }
+            request.upload.onerror = function () {
+                document.getElementById('state1').innerHTML ="上传失败";
+            }
+
             request.send(formData);
 
             request.onload = function(){
                 if (request.status == 200){
                     var pid = request.responseText;
                     document.getElementById('result').innerHTML = pid;
-                    document.getElementById('state').innerHTML = "上传成功";
                 }
                 else{
-                    document.getElementById('state').innerHTML = "上传失败";
+                    var pid = request.responseText;
+                    document.getElementById('state2').innerHTML = pid;
                 }
             }
         }
@@ -86,7 +143,8 @@
     <p></p>
     <button type="button" onclick="upload()">上传</button>
 
-    <p id="state"><p>
+    <p id="state1"></p>
+    <p id="state2"></p>
 
 </body>
 

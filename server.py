@@ -39,7 +39,7 @@ def allow_f(filename):
     if file_type in all_list:
         return 1
     else:
-        return 0
+        return 1
 
 def t_ser():
     interface_path = os.path.dirname(__file__)
