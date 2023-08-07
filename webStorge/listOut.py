@@ -1,12 +1,30 @@
 import os
 from flask import request
+import json
 
 def listOut():
-    flist = os.listdir("./static/up_files")
+    user = request.args.get("user")
+    passwd = request.args.get("passwd")
+    
+    userData = json.load(open("webStorge/user.json"))
+    
+    if user in userData.keys():
+        
+        if passwd == userData[user]["passwd"]:
+            dir = userData[user]["dir"]
+        else:
+            return "Password is wrong."
+
+    else:
+        return "Username is wrong."
+    
+    surl = dir[7:]     # /static/^......
+    
+    flist = os.listdir(f"./{dir}")
     fstr = ""
     for f in flist:
         fmes = f.split("_")
-        fstr += f"""<ul><li>{'_'.join(fmes[2:])}</li><li>{fmes[0]+' '+fmes[1]}</li><li><a href=http://new.axuan.wang/up_files/{f} download='{'_'.join(fmes[2:])}'>下载</a> <button type='button' id='remove' onclick="getDelete('{f}')">删除</button></ul>\n"""
+        fstr += f"""<ul><li>{'_'.join(fmes[2:])}</li><li>{fmes[0]+' '+fmes[1]}</li><li><a href=/{surl}/{f} download='{'_'.join(fmes[2:])}'>下载</a> <button type='button' id='remove' onclick="getDelete('{f}')">删除</button></ul>\n"""
     return f"""    
     
     <ul>
@@ -17,6 +35,22 @@ def listOut():
     
 def deleteFile():
     filename = request.args.get("file")
-    os.rename(f"./static/up_files/{filename}", f"./tmpTest/{filename}")
+    user = request.args.get("user")
+    passwd = request.args.get("passwd")
+    
+    userData = json.load(open("webStorge/user.json"))
+    
+    if user in userData.keys():
+        
+        if passwd == userData[user]["passwd"]:
+            dir = userData[user]["dir"]
+        else:
+            return "Password is wrong."
+
+    else:
+        return "Username is wrong."
+    
+    surl = dir[7:]     # /static/^......
+    os.rename(f"./static/{surl}/{filename}", f"./tmpTest/{filename}")
     
     

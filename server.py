@@ -1,4 +1,4 @@
-import flask, os, sys, time, datetime 
+import flask, os, sys, time, datetime, json
 from flask import request,redirect,abort
 from wsgiref.simple_server import make_server
 
@@ -20,10 +20,6 @@ def ip_user():     # 获取访问者的ip以及useragent，判断是否在ban的
 
     ip_add = request.remote_addr
     user_a = request.headers.get("User-Agent")
-
-    # get_way = str(request.args.to_dict())
-    # f = open("1.txt","a+")
-    # print(get_way,file = f)
 
     if (ip_add in ip_ban):
         return 0
@@ -107,13 +103,69 @@ def t_ser():
     def upload():
         return '<form action="/upload/do" method="post" enctype="multipart/form-data">\n<input type="file" name="img" multiple>\n<button type="submit">上传</button></form>'
 
+    @server.route('/weblogin', methods=["get"])
+    def login():
+        with open("./webStorge/loginPage.html") as f:
+            return "".join(f.readlines())
+    
+    @server.route("/upload/login", methods=["POST"])
+    def logindo():
+        user = request.form.get("user")
+        passwd = request.form.get("passwd")
+        
+        userData = json.load(open("./webStorge/user.json"))
+        
+        if user in userData.keys():
+            
+            if passwd == userData[user]["passwd"]:
+                with open("./webStorge/improve_upload.html") as f:
+                    return f"/webstorge?user={user}&passwd={passwd}"
+            else:
+                return "Password is wrong."
+
+        else:
+            return "Username is wrong."
+    
+    @server.route('/webstorge',methods=["get"])
+    def webstorge():
+        user = request.args.get("user")
+        passwd = request.args.get("passwd")
+        
+        userData = json.load(open("./webStorge/user.json"))
+        
+        if user in userData.keys():
+            
+            if passwd == userData[user]["passwd"]:
+                with open("./webStorge/improve_upload.html") as f:
+                    return "".join(f.readlines())
+            else:
+                return "Password is wrong."
+
+        else:
+            return "Username is wrong."
+
     @server.route('/upload/do', methods=['post'])
     def upload_do():
+        user = request.args.get("user")
+        passwd = request.args.get("passwd")
+        
+        userData = json.load(open("./webStorge/user.json"))
+        
+        if user in userData.keys():
+            
+            if passwd == userData[user]["passwd"]:
+                dir = userData[user]["dir"]
+            else:
+                return "Password is wrong."
+
+        else:
+            return "Username is wrong."
+        
         fname = request.files.getlist('img')
         for f in fname:
             if f and allow_f(f.filename):
                 t = time.strftime('%Y%m%d_%H%M%S_')
-                new_fname = r'./static/up_files/' + t + f.filename
+                new_fname = rf'./{dir}/' + t + f.filename
                 f.save(new_fname)
             elif f and allow_f(f.filename) == 0:
                 return '不允许的上传文件格式'

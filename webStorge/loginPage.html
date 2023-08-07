@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<title>Upload Server Login System</title>
+
+<script>
+    function confirm(){
+        var request = new XMLHttpRequest();
+        var toBack = new FormData();
+        var url = "/upload/login";
+        var user = document.getElementById("user").value
+        var passwd = document.getElementById("passwd").value
+
+        toBack.append("user", user);
+        toBack.append("passwd", passwd);
+
+        request.open("POST", url);
+        request.send(toBack);
+
+        request.onload = function(){
+            if (request.status == 200){
+                var resp = request.responseText;
+                if (resp == "Password is wrong." || resp == "Username is wrong.") {
+                    document.getElementById('result').innerHTML = resp;
+                }
+                else{
+                    window.location.replace(resp);
+                }
+            }
+        }
+    }
+</script>
+
+<body>
+    <h5>User Name</h5>
+    <input type="text" id="user"/><p></p>
+    <h5>Password</h5>
+    <input type="password" id="passwd"/><p></p>
+    
+    <input type="submit" id="login" onclick="confirm()" />
+
+    <p id="result"></p>
+</body>

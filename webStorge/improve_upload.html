@@ -19,8 +19,25 @@
 
 <head>
     <script>
-        function getList() {            
-            var url="/upload/checkList";
+        function getQueryVariable(variable){
+            let query = window.location.search.substring(1);
+            let vars = query.split("&");
+            for (let i=0;i<vars.length;i++) {
+                    let pair = vars[i].split("=");
+                    if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
+
+        function userMes(){
+            const a = getQueryVariable("user");
+            const b = getQueryVariable("passwd");
+            document.getElementById('state3').innerHTML = a+b;
+        }
+
+        function getList() {
+            
+            var url="/upload/checkList?user="+getQueryVariable("user")+"&passwd="+getQueryVariable("passwd");
             var request = new XMLHttpRequest();
             request.open("GET",url);
 
@@ -34,7 +51,7 @@
         }
 
         function getDelete(filename) {            
-            var url="/upload/delete?file="+filename;
+            var url="/upload/delete?file="+filename+"&user="+getQueryVariable("user")+"&passwd="+getQueryVariable("passwd");
             var request = new XMLHttpRequest();
             request.open("GET",url);
 
@@ -49,7 +66,7 @@
         }
 
         function upload(){
-            var url="/upload/do";
+            var url="/upload/do?user="+getQueryVariable("user")+"&passwd="+getQueryVariable("passwd");
             var request = new XMLHttpRequest();
             var formData = new FormData();
             var file = document.getElementById('file_upload').files;
@@ -64,44 +81,27 @@
                 stime = new Date().getTime();
                 sloaded = 0;
             }
-            request.upload.onprogress = function (evt) {    
-                // 当前上传文件的文件大小：evt.loaded
-                // 需要上传的总文件的大小：evt.total
-                // 上传进度
-                //上传文件的百分比
-                //toFixed(参数)：保留几位小数  参数是整型的数值，数值是几就保留几位小数
+            request.upload.onprogress = function (evt) {
                 let persent = ((evt.loaded / evt.total) * 100).toFixed(2);   
                 
                 document.getElementById("state1").innerHTML = persent + "%";
 
-                // 上传速度
-                // 上传结束时间
                 let endTime = new Date().getTime();
 
-                // 1、时间差（时间段）
                 let dTime = (endTime - stime) / 1000; //毫秒换算成秒
-
-                // 2、当前时间段内上传的文件大小
                 let dloaded = evt.loaded - sloaded;
-
-                // 3、当前速度= 当前上传文件的内容/当前时间差
                 let speed = dloaded / dTime;
 
-                // 重置上传开始时间与文件大小(分时段上传的)
                 stime = new Date().getTime();
                 sloaded = evt.loaded;
 
-                // 基本单位request：字节b
-                // 1mb=1024kb    1kb=1024b
-                // b/s
-                let unit = "b/s"; //不足1kb，以b/s来计算速度
-                // kb/s
-                if (speed / 1024 > 1) { //当大小超过1024b(即1kb时)，以kb/s来计算速度
+                let unit = "b/s";
+                if (speed / 1024 > 1) {
                     unit = "kb/s";
                     speed = speed / 1024;
                 }
-                // mb/s  
-                if (speed / 1024 > 1) { //当大小超过1024Kb(即1mb时)，以mb/s来计算速度
+
+                if (speed / 1024 > 1) {
                     unit = "mb/s";
                     speed = speed / 1024;
                 }
