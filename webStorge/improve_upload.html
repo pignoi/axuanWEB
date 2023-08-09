@@ -29,14 +29,13 @@
             return(false);
         }
 
-        function userMes(){
+        function welcome(){
             const a = getQueryVariable("user");
-            const b = getQueryVariable("passwd");
-            document.getElementById('state3').innerHTML = a+b;
+            document.getElementById('welcome').innerHTML = "欢迎你，"+a+"&emsp;"+"<a href='/weblogin'>登出</a>" ;
+            checkSize();
         }
 
         function getList() {
-            
             var url="/upload/checkList?user="+getQueryVariable("user")+"&passwd="+getQueryVariable("passwd");
             var request = new XMLHttpRequest();
             request.open("GET",url);
@@ -65,78 +64,115 @@
        
         }
 
-        function upload(){
-            var url="/upload/do?user="+getQueryVariable("user")+"&passwd="+getQueryVariable("passwd");
-            var request = new XMLHttpRequest();
+        function checkSize(){
+            const user = getQueryVariable("user");
+            var url="/checkSize";
             var formData = new FormData();
+            var request = new XMLHttpRequest();
+            var filesize = 0;
+
             var file = document.getElementById('file_upload').files;
-
             for (var i=0; i<file.length; i++){
-                formData.append("img", file[i]);
+                filesize = filesize + file[i].size;
             }
-            document.getElementById('state1').innerHTML = "正在上传";
+
+            formData.append("user", user);
+            formData.append("allsize", filesize);
+
             request.open("POST", url);
-            
-            request.upload.onloadstart = function () {
-                stime = new Date().getTime();
-                sloaded = 0;
-            }
-            request.upload.onprogress = function (evt) {
-                let persent = ((evt.loaded / evt.total) * 100).toFixed(2);   
-                
-                document.getElementById("state1").innerHTML = persent + "%";
-
-                let endTime = new Date().getTime();
-
-                let dTime = (endTime - stime) / 1000; //毫秒换算成秒
-                let dloaded = evt.loaded - sloaded;
-                let speed = dloaded / dTime;
-
-                stime = new Date().getTime();
-                sloaded = evt.loaded;
-
-                let unit = "b/s";
-                if (speed / 1024 > 1) {
-                    unit = "kb/s";
-                    speed = speed / 1024;
-                }
-
-                if (speed / 1024 > 1) {
-                    unit = "mb/s";
-                    speed = speed / 1024;
-                }
-                document.getElementById("state2").innerHTML = speed.toFixed(2) + unit;
-            }
-            request.upload.onload = function () {
-                document.getElementById('state1').innerHTML = "上传成功";
-            }
-            request.upload.onerror = function () {
-                document.getElementById('state1').innerHTML ="上传失败";
-            }
-
             request.send(formData);
 
             request.onload = function(){
                 if (request.status == 200){
-                    var pid = request.responseText;
-                    document.getElementById('result').innerHTML = pid;
-                }
-                else{
-                    var pid = request.responseText;
-                    document.getElementById('state2').innerHTML = pid;
+                    var resp = request.responseText;
+                    document.getElementById("storge").innerHTML = resp;
                 }
             }
         }
+
+        function upload(){
+            checkSize();
+            setTimeout(function() {
+                var url="/upload/do?user="+getQueryVariable("user")+"&passwd="+getQueryVariable("passwd");
+                var request = new XMLHttpRequest();
+                var formData = new FormData();
+                var file = document.getElementById('file_upload').files;
+
+                if (document.getElementById("storge").innerHTML != "储存超过上限。"){
+                    for (var i=0; i<file.length; i++){
+                        formData.append("img", file[i]);
+                    }
+                    document.getElementById('state1').innerHTML = "正在上传";
+                    request.open("POST", url);
+                    
+                    request.upload.onloadstart = function () {
+                        stime = new Date().getTime();
+                        sloaded = 0;
+                    }
+                    request.upload.onprogress = function (evt) {
+                        let persent = ((evt.loaded / evt.total) * 100).toFixed(2);   
+                        
+                        document.getElementById("state1").innerHTML = persent + "%";
+        
+                        let endTime = new Date().getTime();
+        
+                        let dTime = (endTime - stime) / 1000; //毫秒换算成秒
+                        let dloaded = evt.loaded - sloaded;
+                        let speed = dloaded / dTime;
+        
+                        stime = new Date().getTime();
+                        sloaded = evt.loaded;
+        
+                        let unit = "b/s";
+                        if (speed / 1024 > 1) {
+                            unit = "kb/s";
+                            speed = speed / 1024;
+                        }
+        
+                        if (speed / 1024 > 1) {
+                            unit = "mb/s";
+                            speed = speed / 1024;
+                        }
+                        document.getElementById("state2").innerHTML = speed.toFixed(2) + unit;
+                    }
+                    request.upload.onload = function () {
+                        document.getElementById('state1').innerHTML = "上传成功";
+                    }
+                    request.upload.onerror = function () {
+                        document.getElementById('state1').innerHTML ="上传失败";
+                    }
+        
+                    request.send(formData);
+        
+                    request.onload = function(){
+                        if (request.status == 200){
+                            var pid = request.responseText;
+                            document.getElementById('result').innerHTML = pid;
+                        }
+                        else{
+                            var pid = request.responseText;
+                            document.getElementById('state2').innerHTML = pid;
+                        }
+                    }
+                }
+                else{
+                    document.getElementById("storge").innerHTML = document.getElementById("storge").innerHTML+"不能继续上传。";
+                }
+            },1000);
+            
+        }
+            
 
 
     </script>
 </head>
 
-<body>
-
+<body onload="welcome()">
+    <p id="welcome"></p>
+    <p id="storge" align="right"></p>
     <p id="result" align="center">暂无结果</p>
 
-    <button align="center" type="button" id="check" onclick="getList()">查看static路径下文件</button>
+    <button align="center" type="button" id="check" onclick="getList()">查看网盘文件</button>
     <p></p>
     
     <input type="file" id="file_upload" multiple/>

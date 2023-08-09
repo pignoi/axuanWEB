@@ -5,7 +5,7 @@ from wsgiref.simple_server import make_server
 import zhz_html,zhz_up
 import own_html,own_up
 import vpnServer
-import webStorge.listOut
+from webStorge.listOut import upload
 
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -100,7 +100,7 @@ def t_ser():
             abort(404)
 
     @server.route('/upload', methods=['get'])
-    def upload():
+    def upload_ddd():
         return '<form action="/upload/do" method="post" enctype="multipart/form-data">\n<input type="file" name="img" multiple>\n<button type="submit">上传</button></form>'
 
     @server.route('/weblogin', methods=["get"])
@@ -118,13 +118,57 @@ def t_ser():
         if user in userData.keys():
             
             if passwd == userData[user]["passwd"]:
-                with open("./webStorge/improve_upload.html") as f:
+                if userData[user]["state"] != "OK":
+                    dict1 = {"Wait":"申请已提交，请等待管理员审核。", "No":"审核不通过，请重新联系管理员。"}
+                    return dict1[userData[user]["state"]]
+                else:
                     return f"/webstorge?user={user}&passwd={passwd}"
             else:
                 return "Password is wrong."
 
         else:
             return "Username is wrong."
+        
+    @server.route("/register", methods=["GET"])
+    def register():
+        with open("./webStorge/registerPage.html") as f:
+            return "".join(f.readlines())
+    
+    @server.route("/upload/register", methods=["POST"])
+    def registerdo():
+        user = request.form.get("user")
+        passwd = request.form.get("passwd")
+        nickname = request.form.get("nickname")
+        
+        userData = json.load(open("./webStorge/user.json"))
+        
+        if user in userData.keys():
+            return "用户名重复，请重新输入。"
+        else:
+            userData[user] = {"passwd":passwd, "dir":f"static/webStorge/{user}", "state":"Wait", "limit":"1Gb", "nickname":nickname}
+            os.mkdir(f"./static/webStorge/{user}")
+            with open("./webStorge/user.json","w") as f:
+                f.write(json.dumps(userData, indent=4,sort_keys=False, ensure_ascii=False))
+            return "注册成功，请联系管理员进行审核！"
+        
+    @server.route("/checkSize", methods=["POST"])
+    def checksize():
+        user = request.form.get("user")
+        toAdd = float(request.form.get("allsize"))
+        userData = json.load(open("./webStorge/user.json"))
+        userLimit = float(userData[user]["limit"].split("Gb")[0])
+        userDir = userData[user]["dir"]
+        
+        files = os.listdir(userDir)
+        fsize = toAdd
+        for f in files:
+            fsize += os.path.getsize(userDir +"/"+ f)
+        
+        if fsize/1024/1024/1024 > userLimit:
+            return "储存超过上限。"
+        else:
+            return f"{fsize/1024/1024/1024:.2f}Gb/{userLimit:.2f}Gb"
+        
     
     @server.route('/webstorge',methods=["get"])
     def webstorge():
@@ -136,8 +180,12 @@ def t_ser():
         if user in userData.keys():
             
             if passwd == userData[user]["passwd"]:
-                with open("./webStorge/improve_upload.html") as f:
-                    return "".join(f.readlines())
+                if userData[user]["state"] != "OK":
+                    dict1 = {"Wait":"申请已提交，请等待管理员审核。", "No":"审核不通过，请重新联系管理员。"}
+                    return dict1[userData[user]["state"]]
+                else:
+                    with open("./webStorge/improve_upload.html") as f:
+                        return "".join(f.readlines())
             else:
                 return "Password is wrong."
 
@@ -171,16 +219,20 @@ def t_ser():
                 return '不允许的上传文件格式'
             else:
                 return '请上传文件'
-        return webStorge.listOut.listOut()
+            
+        init = upload()
+        return init.listOut()
 
     @server.route("/upload/checkList", methods=["get"])
     def cL():
-        return webStorge.listOut.listOut()
+        init = upload()
+        return init.listOut()
     
     @server.route("/upload/delete", methods=["GET","POST"])
     def fD():
-        webStorge.listOut.deleteFile()
-        return webStorge.listOut.listOut()
+        init = upload()
+        init.deleteFile()
+        return init.listOut()
     
     @server.route('/zhz',methods=['get'])
     def zhz():
