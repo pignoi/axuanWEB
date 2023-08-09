@@ -4,6 +4,7 @@ records/*
 logs/*
 static/*
 vpnServer.py
+webStorge/user.json
 temp_not/
 tmpTest/
 
