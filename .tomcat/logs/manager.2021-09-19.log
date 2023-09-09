@@ -1,4 +1,0 @@
-19-Sep-2021 15:48:16.256 INFO [http-nio-80-exec-17] org.apache.catalina.core.ApplicationContext.log HTMLManager: list: Listing contexts for virtual host 'localhost'
-19-Sep-2021 15:49:10.033 INFO [http-nio-80-exec-13] org.apache.catalina.core.ApplicationContext.log HTMLManager: list: Listing contexts for virtual host 'localhost'
-19-Sep-2021 15:49:34.914 INFO [http-nio-80-exec-19] org.apache.catalina.core.ApplicationContext.log HTMLManager: list: Listing contexts for virtual host 'localhost'
-19-Sep-2021 16:37:15.082 INFO [http-nio-80-exec-9] org.apache.catalina.core.ApplicationContext.log HTMLManager: list: Listing contexts for virtual host 'localhost'
