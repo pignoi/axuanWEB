@@ -1,15 +1,22 @@
 docker/
-__pycache__/
-records/*
-logs/*
-static/*
-vpnServer.py
-webStorge/user.json
-temp_not/
-tmpTest/
+.tomcat/
+.vnc/
+
+**/__pycache__/
+*/records/*
+*/logs/*
+*/static/*
+*/vpnServer.py
+*/webStorge/user.json
+*/temp_not/
+*/tmpTest/
+*/config.ini
+nginx.conf
 
 static.zip
-.inside**
+*/.inside**
+*/storgeDir/*
+logs/*
 
-!static/*.html
-!static/favicon.ico
+!*/static/*.html
+!*/static/favicon.ico

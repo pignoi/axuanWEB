@@ -1,6 +1,5 @@
 # axuanWEB
 ```bash
-export SELF_CODE=xxx
 
 conda create -n webserver python=3.9.12
 conda activate webserver

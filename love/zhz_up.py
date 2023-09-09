@@ -80,5 +80,5 @@ def zhz_upload():
         filet.seek(0,0)
         filet.write(deal2+already)
 
-        return redirect("/zhz")
+        return redirect("/")
 

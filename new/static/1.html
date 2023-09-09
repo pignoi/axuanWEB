@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>1</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="现阶段一些结果和思考">现阶段一些结果和思考</h1>
+<h2 id="原理推导部分">原理推导部分</h2>
+现在我们知道，根据数值积分的结果，积分结果和对角元并不相关，那么我们不妨将对角元设为0，则我们可以求其解析解：
+<span class="math display">\begin{aligned}
+
+&amp; \rho_{ave}(z)=\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}\rho(\bold{r}){\rm d}x{\rm d}y \\
+&amp; =\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}exp[-(\frac{x^2}{\sigma_{1}^2}+\frac{y^2}{\sigma_{2}^2}+\frac{z^2}{\sigma_{3}^2})] {\rm d}x{\rm d}y \\
+&amp; =\int_{-\infty}^{+\infty}exp[-(\frac{y^2}{\sigma_{2}^2}+\frac{z^2}{\sigma_{3}^2})]{\rm d}y\int_{-\infty}^{+\infty}exp(-\frac{x^2}{\sigma_{1}^2}) {\rm d}x \\
+&amp; =\sigma_1\times\sqrt{\pi}\int_{-\infty}^{+\infty}exp[-(\frac{y^2}{\sigma_{2}^2}+\frac{z^2}{\sigma_{3}^2})]{\rm d}y\\
+&amp; =\sigma_1\times\sigma_2\times\pi\times exp(-\frac{z^2}{\sigma_{3}^2})
+
+\end{aligned}</span>
+<p>$$ 后面的推导就和以前的推导一样了，那么以前的优化过程中只有一个优化参数，若要达到和三维计算（现在通过数值积分实现的部分），就可以通过增加一个前面乘以的系数来加以优化，即最终有两个需要机器学习进行优化的参数。</p>
+<h2 id="数值积分的意义">数值积分的意义</h2>
+<p>后来仔细想了一下从二阶积分到三阶积分的过程，发现在数学上也是可以严格证明的，因为<span class="math inline">${\rm abs}(z-z^{\prime})$</span>的引入并不影响<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ρ</mi><mrow><mi>a</mi><mi>v</mi><mi>e</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\rho_{ave}(z)</annotation></semantics></math>的结果，只是在前面乘上一个<span class="math inline">${\rm abs}(z-z^{\prime})$</span>而已，因此可以直接传递到后面的一个积分当中，并不影响后面的积分。</p>
+<p>因此数值积分的意义可能在于对于更复杂的分布函数上面，只需要规定相应的电荷分布函数，就可以用我们的方法将其结果求出来，因此我想也可以将数值积分的工作流程放在deepmd当中尝试一下，去验证一下最后的结果云云。</p>
+<h2 id="对于其他一些分布函数的想法">对于其他一些分布函数的想法</h2>
+<p>刚才简单看了一下s轨道和p轨道的分布函数，可以发现s轨道基本上就是gaussian分布，然后p轨道在径向（r）部分是gaussian函数，然后其有着特别的角度分布部分。根据物理图形来看，p轨道并不是能用单纯的gaussian分布函数进行拟合的，在gaussian分布函数上面的修改也仅仅是在修改s轨道罢了，因此可能对最终的优化结果没有特别明显的改善。</p>
+<p>如果想要引入更为复杂的分布函数，可以考虑根据元素的成键特征来看，比如对于水分子中的O原子来说，其周围的分布更像是p轨道的分布而H原子更像s轨道分布，因此可以使用两种分布方式对其进行拟合，需要的仅仅是将p轨道的分布整理出来即可，在这里简单记录下： 
+<span class="math inline">
+$\psi(r,\theta,\phi) = R(r)\times Y(\theta, \phi)$
+</span> 
+for 2p: 
+<span class="math display">
+R(r) = N(\frac{r}{a_0}){\rm exp}(-\frac{r}{2a_0})\\
+\begin{matrix}
+Y_z(\theta,\phi)={\rm cos}(\theta)&amp; Y_x(\theta, \phi)={\rm sin}(\theta){\rm cos}(\phi)&amp; Y_y(\theta,\phi)={\rm sin}(\theta){\rm sin}(\phi)
+\end{matrix}
+</span> 因为有已经写好的积分工具，我们需要做的就是将其转化为直角坐标然后积分就可以啦！</p>
+</body>
+</html>

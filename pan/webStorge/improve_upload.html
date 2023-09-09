@@ -161,6 +161,18 @@
             },1000);
             
         }
+
+        function download_files(filename){
+            const user = getQueryVariable("user");
+            const token = getQueryVariable("passwd");
+            var url="/download?user="+user+"&passwd="+token+"&filename="+filename;
+            var a = document.createElement("a");
+
+            a.href = url;
+            a.click();
+            a.remove();
+
+        }
             
 
 
