@@ -4,15 +4,54 @@
 <title>Improved Upload Server</title>
 
 <style>
+    .welcomeS{
+        font-family: HeiTi;
+        font-size: 32px;
+        text-align: center;
+
+    }
+    .buttonS{
+        display:block;
+        margin: 0 auto;
+        width: 150px;
+        height: 50px;
+        line-height: 45px;
+        color: black;
+        background-color: rgb(105, 234, 230);
+        border-radius: 8px;
+        border-width: 0px;
+        font-family: HeiTi;
+        font-size: 17px;
+        font-weight: 600;
+        text-align: center;
+        cursor: pointer;
+
+    }
+    input {
+    display: none;
+    }
+    
+    .buttonS:hover{
+        background-color: antiquewhite;
+
+    }
+
     ul{
         display:flex;
         list-style:none;
-        margin:0%;
+        margin: 0 auto;
+        word-break: break-all;
+        
     }
     ul li{
         flex:1;
-        background-color:aqua;
-        margin:0 0 -1px -1px;
+        background-color:rgb(131, 223, 153);
+        display:flex;
+        min-height: 50px;
+        height: auto;
+        margin: 0 auto;
+        justify-content: center;
+        align-items: center;
         border:1px solid black ;
     }
 </style>
@@ -173,6 +212,43 @@
             a.remove();
 
         }
+
+        // window.onload = function () {
+        //     var x = document.getElementById("file_upload");
+        //     x.addEventListener("change", get_file_mes);
+        // };
+
+        function get_file_mes(){
+            var files = document.getElementById("file_upload").files;
+            var outHtml = ""
+            for (var i=0; i<files.length; i++){
+                fileName = files[i].name;
+                fileSize = files[i].size;
+
+                let unit = "b";
+                if (fileSize / 1024 > 1) {
+                    unit = "Kb";
+                    fileSize = fileSize / 1024;
+                }
+
+                if (fileSize / 1024 > 1) {
+                    unit = "Mb";
+                    fileSize = fileSize / 1024;
+                }
+
+                if (fileSize / 1024 > 1) {
+                    unit = "Gb";
+                    fileSize = fileSize / 1024;
+                }
+
+                sizeInfo = fileSize.toFixed(2) + unit;
+
+                outHtml = outHtml+"<ul><li><h5>"+fileName+"</h5></li><li><h5>"+sizeInfo+"</h5></li></ul>";
+
+            }
+            document.getElementById("file_mes").innerHTML = outHtml;
+        }
+        
             
 
 
@@ -180,16 +256,20 @@
 </head>
 
 <body onload="welcome()">
-    <p id="welcome"></p>
+    <p class="welcomeS" id="welcome"></p>
+    <hr color="green" width="1500px" size="3px" align="center">
     <p id="storge" align="right"></p>
     <p id="result" align="center">暂无结果</p>
 
-    <button align="center" type="button" id="check" onclick="getList()">查看网盘文件</button>
+    <button align=center class="buttonS" type="button" id="check" onclick="getList()">查看网盘文件</button>
     <p></p>
     
-    <input type="file" id="file_upload" multiple/>
+    <label class="buttonS" for="file_upload"> 选择文件 </label>
+    <input type="file" id="file_upload" onchange="get_file_mes()" multiple/>
+    <p id="file_mes" align="center">暂无文件</p>
+
     <p></p>
-    <button type="button" onclick="upload()">上传</button>
+    <button class="buttonS" type="button" onclick="upload()">上传</button>
 
     <p id="state1"></p>
     <p id="state2"></p>
